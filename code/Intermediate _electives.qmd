@@ -237,20 +237,25 @@ fig_data <- aq_ins_clean |>
 
 # parallel of Scherer's df_peng_summary, with hand-picked label positions
 df_inv_summary <-
+  # hand-picked (x, y) label positions for each taxon group
   tribble(
     ~taxon_group, ~x, ~y,
     "Microcrustaceans", 38, 6.4,
     "Aquatic insects", 55, 3.2,
     "Worms", 55, 5.6
   ) |> 
+  # attach per-group summary stats by joining on taxon_group
   full_join(
     fig_data |> 
+      # group at the taxon-group level
       group_by(taxon_group) |> 
+      # count observations and compute medians for each axis variable
       summarize(n = n(),
                 med_sal_median     = median(med_sal,     na.rm = TRUE),
                 log_ave_lit_median = median(log_ave_lit, na.rm = TRUE)),
     by = "taxon_group"
   ) |> 
+  # build the multi-line label string shown next to each group on the plot
   mutate(label = glue("Median salinity: {format(round(med_sal_median, 1), nsmall = 1)} ppt\nMedian log abund: {format(round(log_ave_lit_median, 2), nsmall = 2)}\nn = {n}"))
 ```
 
@@ -418,5 +423,17 @@ scat <-
 
 # display
 scat
+```
+
+## 3c. Save figure
+
+```{r}
+#| label: save-figure
+
+# save to code folder so the README can display it
+ggsave(filename = here("code", "final_figure.png"),
+       plot     = scat,
+       width    = 10, height = 7,
+       dpi      = 300, bg = "white")
 ```
 
