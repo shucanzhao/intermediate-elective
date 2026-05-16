@@ -25,7 +25,7 @@ intermediate-elective/
 
 # Rendered output
 
-[Intermediate_electives.pdf](https://github.com/shucanzhao/intermediate-elective/blob/6baa4b98c241546fc91a35c93708d25893891bd9/code/Intermediate-_electives.pdf)
+[Intermediate_electives.pdf](https://github.com/shucanzhao/intermediate-elective/blob/142d97c7f6847a940c5c43b0a8877a058bb3dd71/code/Intermediate-_electives.pdf)
 
 ![Figure](https://github.com/shucanzhao/intermediate-elective/blob/7e487a5bbb075976cce119b219249131d2095c4b/code/final_figure.png)
 
