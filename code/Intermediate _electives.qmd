@@ -433,7 +433,32 @@ scat
 # save to code folder so the README can display it
 ggsave(filename = here("code", "final_figure.png"),
        plot     = scat,
-       width    = 10, height = 7,
-       dpi      = 300, bg = "white")
+       width    = 10,
+       height = 7,
+       dpi      = 300,
+       bg = "white")
 ```
 
+# Problem 4. Describe your process
+
+**Process of using Scherer's code to create a visualization**
+
+- I copied the `2020_31_PalmerPenguins.Rmd` chunk-by-chunk and swapped his variables for mine. 
+
+- His `df_peng_summary`, which is a `tribble()` of hand-picked label positions joined to a per-species `summarize()` and pasted into a `glue::glue()` label, became my `df_inv_summary` with `taxon_group` in place of `species` and `med_sal`/`log_ave_lit` in place of `bill_length_mm`. 
+
+- His scatter chunk transferred almost no change: both `geom_point` layers, both `geom_text` layers (bold name, then `after_scale, and the coord-cartesian scales.
+
+**Challenges encountered as made visualization** 
+
+- Scherer's figure uses three Neutraface display fonts that don't work with default, so I change to `family = "serif"` and lost a little of the original's characters. The bubble-size mapping required hand-tuning because abundances per L run from <1 to >200, while Scherer's body-mass range is much tighter and his default `scale_size` worked out of the box. 
+
+- I also had to hand-pick the three `(x, y)` label positions inside the `tribble()` so the per-group label blocks didn't overlap the data clusters. Also, the location of annotation need adjust many times by hand.
+
+- I started by also copying Scherer's two cross-shaped `geom_errorbar` , whichi s the median SD in both x and y, but the resulting error bars looked busy and overlap with each other on top of the bubble points and I removed them.
+
+**How visualization differs from visualizations you made in class, for assignments, or for a previous elective** 
+
+- Previous class and assignment figures were single-`ggplot` calls with default themes and no in-plot annotation. This figure carries multiple annotation layers, which are two `geom_point` layers per group and two `geom_text` blocks per group. They composed into a single labelled scatter with a custom theme, bubble-size legend, and derived colours. It is the first figure I have built where group identity and group statistics are shown inside the plot rather than in a side legend or marginal panel.
+
+- I learned the new pacakge `glue` for multi-line label strings. And package colorsapce for darken() and lighten() for after_scale().
