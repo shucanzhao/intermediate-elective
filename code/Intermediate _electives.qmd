@@ -166,3 +166,23 @@ aq_ins_clean <- aq_ins |>
   mutate(site_full = fct_reorder(site_full, med_sal, .fun = "median", .na_rm = TRUE),
          site_full = fct_rev(site_full))
 ```
+
+
+# Problem 1. Explain your inspiration
+
+**Which visualization you chose for your inspiration** 
+
+- I chose Cédric Scherer's Bill Dimensions of Brush-tailed Penguins (TidyTuesday 2020/31). Panel A of his figure is a scatter plot of bill length vs. bill depth coloured by penguin species. 
+There are two signature techniques I am copying: two-layer `geom_point`, which is a filled layer for the body of each point and a transparent layer with a white outline on top, and per-species text labels placed at fixed positions showing the species name in bold colour with a lightened multi-line stats block immediately below.
+
+**Why it makes sense for your dataset of choice.** 
+
+- The cleaned aquatic invertebrate data has the structure Panel A was built for. There are two continuous variables per observation, median salinity at the survey and log-transformed abundance per L. It is a small number of groups to color by, and a continuous variable to map onto bubble size. The labelled blocks let each group carry its own median statistics inside the plot rather than in a side legend.
+
+**Which variables from your dataset will be shown in your visualization, and what visual components they map onto (axes, shapes, colors, etc.)**
+
+- x-axis: `med_sal` median salinity
+- y-axis: `log_ave_lit` = `log(ave_lit + 1)`
+- point colour and label colour: `taxon_group` , Microcrustaceans, Aquatic insects and Worms, which are 3 taxa each
+- point size: `ave_lit`, average abundance per L
+- group name + median salinity, median log abundance: per-group label block
