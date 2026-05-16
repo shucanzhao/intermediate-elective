@@ -10,16 +10,18 @@ I chose Cédric Scherer's Bill Dimensions of Brush-tailed Penguins and adapted h
 
 # Data and file information
 
+```
 intermediate-elective/
-├── README.md                                    <- this file
+├── README.md
 ├── code/
-│   ├── intermediate-elective.qmd                <- Quarto file
-│   ├── [intermediate-elective.pdf](https://github.com/shucanzhao/intermediate-elective/blob/6baa4b98c241546fc91a35c93708d25893891bd9/code/Intermediate-_electives.pdf)
-│   ├── final_figure.png                         <- the final visualization image
-│   └── sketch.png                               <- planning sketch
+│   ├── intermediate-elective.qmd 
+│   ├── intermediate-elective.pdf
+│   ├── final_figure.png
+│   └── sketch.png
 └── data/
     ├── Aquatic Sampling Data-2026-03-10.xlsx
     └── taxon_list.csv
+```
 
 # Rendered output
 
