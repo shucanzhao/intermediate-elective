@@ -186,3 +186,8 @@ There are two signature techniques I am copying: two-layer `geom_point`, which i
 - point colour and label colour: `taxon_group` , Microcrustaceans, Aquatic insects and Worms, which are 3 taxa each
 - point size: `ave_lit`, average abundance per L
 - group name + median salinity, median log abundance: per-group label block
+
+# Problem 2. Plan your figure
+
+![Planning sketch of the figure.](sketch.png){fig-align="center"}
+
