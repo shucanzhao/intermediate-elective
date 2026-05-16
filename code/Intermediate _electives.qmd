@@ -284,3 +284,139 @@ theme_update(
   plot.margin = margin(rep(20, 4))
 )
 ```
+
+```{r}
+#| label: scatterplot
+#| fig-width: 10
+#| fig-height: 7
+
+scat <-
+  # base plot: salinity on x, log abundance on y
+  ggplot(fig_data, aes(med_sal, log_ave_lit)) +
+  # filled point layer with alpha (Scherer's first geom_point)
+  geom_point(
+    # fill color by taxon group, bubble size by abundance per L
+    aes(fill = taxon_group, size = ave_lit),
+    # filled circle with separate border
+    shape = 21,
+    # hide the border on this layer
+    color = "transparent",
+    # semi-transparent fill
+    alpha = .3
+  ) +
+  # white-outlined transparent point layer (Scherer's second geom_point)
+  geom_point(
+    # same size mapping as the fill layer
+    aes(size = ave_lit),
+    # same shape
+    shape = 21,
+    # white outline ring
+    color = "white",
+    # no fill so the layer below shows through
+    fill = "transparent"
+  ) +
+  # bold group name at the hand-picked label position
+  geom_text(
+    # one row per taxon group
+    data = df_inv_summary,
+    # label coordinates from the tribble; colour matches the bubbles
+    aes(x = x, y = y, label = taxon_group, color = taxon_group),
+    # serif font (Scherer used Neutraface)
+    family = "serif",
+    # bold weight
+    fontface = "bold",
+    # text size
+    size = 5.0
+  ) +
+  # lightened median-stats block just below the label
+  geom_text(
+    data = df_inv_summary,
+    # placed 0.35 units below the bold name; lighten the group colour
+    aes(x = x, y = y - .35, label = label, color = taxon_group,
+        color = after_scale(lighten(color, .3))),
+    family = "serif",
+    # smaller than the bold name
+    size = 3.2,
+    # tighter line spacing
+    lineheight = .9,
+    # adjust at top so text grows downward
+    vjust = 1
+  ) +
+  # "bubble size" annotation, placed at the bottom next to the size legend
+  annotate("text",
+    # bottom area, right
+    x = 50, y = 0.7,
+    label = "Bubble size represents average\nabundance per litre",
+    # match the rest of the figure
+    family = "serif",
+    # italic for the explanatory note
+    fontface = "italic",
+    # matches the legend bubble outline
+    color = "pink4",
+    # small caption-style text
+    size = 3,
+    # tighter line spacing
+    lineheight = .9,
+    # adjust
+    hjust = 0, vjust = 0.5
+  ) +
+  # allow text/elements to extend beyond the panel
+  coord_cartesian(clip = "off") +
+  # x range covers full salinity span, tick every 20 ppt
+  scale_x_continuous(limits = c(-2, 80),
+                     breaks = seq(0, 80, by = 20),
+                     expand = c(0, 0)) +
+  # y range covers log abundance span, tick every 2 log-units
+  scale_y_continuous(limits = c(-0.3, 8),
+                     breaks = seq(0, 8, by = 2),
+                     expand = c(0, 0)) +
+  # custom palette, no colour legend
+  scale_color_manual(values = pal, guide = "none") +
+  # same palette for fills
+  scale_fill_manual(values = pal, guide = "none") +
+  # bubble-size legend
+  scale_size(
+    # no legend title
+    name = "",
+    # three reference sizes
+    breaks = c(1, 50, 200),
+    # labels for the three breaks
+    labels = c("1/L", "50/L", "200/L"),
+    # min and max point radii
+    range = c(1.5, 14)
+  ) +
+  # labels under each bubble; outline colour matches the annotation
+  guides(size = guide_legend(label.position = "bottom",
+                             override.aes = list(color = "pink4",
+                                                 stroke = .8,
+                                                 fill = NA))) +
+  theme(
+    # bottom area, right of the annotation
+    legend.position = c(.78, .08),
+    # bubbles laid out in a row
+    legend.direction = "horizontal",
+    # narrow keys
+    legend.key.width = unit(.01, "lines"),
+    # small grey serif text
+    legend.text = element_text(size = 8, family = "serif", color = "grey50")
+  ) +
+  labs(
+    # x-axis label
+    x = "Median salinity (ppt)",
+    # y-axis label
+    y = "Log(1 + average abundance per L)",
+    title = "Salinity shapes how aquatic invertebrate groups split",
+    subtitle = "Scatterplot of salinity vs log abundance",
+    # multi-line caption
+    caption = paste(
+      "Data: ENVS 193DD aquatic invertebrate surveys (NCOS, UCSB).",
+      "Visualization adapted from Cedric Scherer's",
+      "'Bill Dimensions of Brush-tailed Penguins'.",
+      sep = " "
+    )
+  )
+
+# display
+scat
+```
+
