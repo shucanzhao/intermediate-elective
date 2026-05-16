@@ -33,8 +33,9 @@ library(scales)
 # reading in .xlsx files
 library(readxl)
 
-# arranging plots
-library(patchwork)
+# adapting Scherer's figure
+library(colorspace)   # darken() and lighten() for after_scale()
+library(glue)         # multi-line label strings
 ```
 
 ## Data
@@ -229,3 +230,57 @@ fig_data <- aq_ins_clean |>
                                          "Worms")))
 ```
 
+## 3b. Code the figure
+
+```{r}
+#| label: data-prep-scatterplot
+
+# parallel of Scherer's df_peng_summary, with hand-picked label positions
+df_inv_summary <-
+  tribble(
+    ~taxon_group, ~x, ~y,
+    "Microcrustaceans", 38, 6.4,
+    "Aquatic insects", 55, 3.2,
+    "Worms", 55, 5.6
+  ) |> 
+  full_join(
+    fig_data |> 
+      group_by(taxon_group) |> 
+      summarize(n = n(),
+                med_sal_median     = median(med_sal,     na.rm = TRUE),
+                log_ave_lit_median = median(log_ave_lit, na.rm = TRUE)),
+    by = "taxon_group"
+  ) |> 
+  mutate(label = glue("Median salinity: {format(round(med_sal_median, 1), nsmall = 1)} ppt\nMedian log abund: {format(round(log_ave_lit_median, 2), nsmall = 2)}\nn = {n}"))
+```
+
+```{r}
+#| label: figure-aesthetics
+
+# three saturated colors, same as (Scherer's pal)
+pal <- c("Microcrustaceans" = "#159090",
+         "Aquatic insects"  = "#FF8C00",
+         "Worms"            = "#A034F0") 
+
+# theme adapted from Scherer's theme_update, without Neutraface fonts
+theme_set(theme_minimal(base_size = 12, base_family = "serif"))
+theme_update(
+  panel.grid.major = element_line(color = "grey92", size = .4),
+  panel.grid.minor = element_blank(),
+  axis.title.x = element_text(color = "grey30", margin = margin(t = 7)),
+  axis.title.y = element_text(color = "grey30", margin = margin(r = 7)),
+  axis.text = element_text(color = "grey50"),
+  axis.tick = element_line(color = "grey92", size = .4),
+  legend.position = "top",
+  plot.title = element_text(hjust = 0, color = "black",
+                               size = 21, margin = margin(t = 10, b = 35)),
+  plot.subtitle = element_text(hjust = 0, face = "italic", color = "grey30",
+                               size = 14, margin = margin(0, 0,25, 0)),
+  plot.title.position = "plot",
+  plot.caption = element_text(color = "grey50", size = 9, hjust = 0,
+                                        lineheight = 1.05,
+                                        margin = margin(30, 0, 0, 0)),
+  plot.caption.position  = "plot",
+  plot.margin = margin(rep(20, 4))
+)
+```
