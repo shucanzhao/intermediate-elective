@@ -191,3 +191,41 @@ There are two signature techniques I am copying: two-layer `geom_point`, which i
 
 ![Planning sketch of the figure.](sketch.png){fig-align="center"}
 
+# Problem 3. Code your figure
+
+## 3a. Wrangle
+
+```{r}
+#| label: figure-wrangling
+
+# collapse the 9 surveyed taxa into 3 ecological groups
+group_lookup <- tribble(
+  ~taxon,                         ~taxon_group,
+  "ostracod",                     "Microcrustaceans",
+  "copepod",                      "Microcrustaceans",
+  "cladocera",                    "Microcrustaceans",
+  "hemiptera_corixidae_boatman",  "Aquatic insects",
+  "diptera_ceratopogonidae",      "Aquatic insects",
+  "diptera_chironomid",           "Aquatic insects",
+  "annelida_oligochaete",         "Worms",
+  "annelida_polychaete",          "Worms",
+  "nematode",                     "Worms"
+)
+
+# build the data frame the figure will read from
+fig_data <- aq_ins_clean |> 
+  # attach the 3-group ecological label
+  left_join(group_lookup, by = "taxon") |> 
+  # focus on presences (abundance > 0)
+  filter(ave_lit > 0) |> 
+  # drop surveys that have no matching water quality reading
+  filter(!is.na(med_sal)) |> 
+  # log + 1 transform abundance so the scatter spreads out
+  mutate(log_ave_lit = log(ave_lit + 1),
+         # factor order: micro - insects - worms
+         taxon_group = factor(taxon_group,
+                              levels = c("Microcrustaceans",
+                                         "Aquatic insects",
+                                         "Worms")))
+```
+
